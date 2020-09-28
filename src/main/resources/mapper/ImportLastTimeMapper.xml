@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hito.dataware.scheduler.dao.ImportLastTimeMapper">
+  <resultMap id="BaseResultMap" type="com.hito.dataware.scheduler.bean.ImportLastTime">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="table_name" jdbcType="VARCHAR" property="tableName" />
+    <result column="import_time" jdbcType="INTEGER" property="importTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="shut_down" jdbcType="INTEGER" property="shutDown" />
+  </resultMap>
+
+  <select id="selectByTableName" resultMap="BaseResultMap">
+    select * from import_last_time where table_name=#{tableName}
+  </select>
+  <update id="updateByTableName">
+    update import_last_time set
+    <if test="map.status!=null">
+      status=#{map.status}
+    </if>
+    <if test="map.importTime!=null" >
+     , import_time=#{map.importTime}
+    </if>
+    where table_name=#{map.tableName}
+  </update>
+
+  <update id="startTableBatch">
+    <foreach
+
+            collection="list"
+
+            separator=";"
+
+            item="item">
+
+      update import_last_time set
+
+      shut_down=0
+
+      where table_name = #{item}
+
+    </foreach>
+
+  </update>
+  <update id="shutDownTableBatch">
+    <foreach
+
+            collection="list"
+
+            separator=";"
+
+            item="item">
+
+      update import_last_time set
+
+      shut_down=1
+
+      where table_name = #{item}
+
+    </foreach>
+
+  </update>
+
+  <update id="resertAllTables">
+    update import_last_time set import_time=-1,status=0
+  </update>
+
+  <update id="resetSelectiveTables">
+    <foreach
+
+            collection="list"
+
+            separator=";"
+
+            item="item">
+
+      update import_last_time set
+
+      import_time=-1,status=0
+
+      where table_name = #{item}
+
+    </foreach>
+
+  </update>
+</mapper>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hito.dataware.scheduler.dao.L0CleanAisDynamicSouthMapper">
+    <resultMap id="BaseResultMap" type="com.hito.dataware.scheduler.bean.L0CleanAisDynamicSouth">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="MMSI" jdbcType="INTEGER" property="mmsi"/>
+        <result column="Record_Datetime" jdbcType="INTEGER" property="recordDatetime"/>
+        <result column="Longitude" jdbcType="INTEGER" property="longitude"/>
+        <result column="Latitude" jdbcType="INTEGER" property="latitude"/>
+        <result column="Direction" jdbcType="SMALLINT" property="direction"/>
+        <result column="Heading" jdbcType="SMALLINT" property="heading"/>
+        <result column="Speed" jdbcType="SMALLINT" property="speed"/>
+        <result column="Status" jdbcType="TINYINT" property="status"/>
+        <result column="ROT_Sensor" jdbcType="SMALLINT" property="rotSensor"/>
+        <result column="AIS_Source" jdbcType="SMALLINT" property="aisSource"/>
+        <result column="Ship_Name" jdbcType="VARCHAR" property="shipName"/>
+        <result column="Call_Sign" jdbcType="VARCHAR" property="callSign"/>
+        <result column="IMO_Number" jdbcType="INTEGER" property="imoNumber"/>
+        <result column="identityTime" jdbcType="INTEGER" property="identityTime"/>
+        <result column="Ship_Type" jdbcType="TINYINT" property="shipType"/>
+        <result column="To_Bow" jdbcType="SMALLINT" property="toBow"/>
+        <result column="To_Stern" jdbcType="SMALLINT" property="toStern"/>
+        <result column="To_Port" jdbcType="SMALLINT" property="toPort"/>
+        <result column="To_StarBoard" jdbcType="SMALLINT" property="toStarboard"/>
+		<result column="ship_length" jdbcType="SMALLINT" property="shipLength"/>
+		<result column="ship_breadth" jdbcType="SMALLINT" property="shipBreadth"/>
+        <result column="Fixing_Device" jdbcType="TINYINT" property="fixingDevice"/>
+        <result column="Is_IMO_Number_Valid" jdbcType="TINYINT" property="isImoNumberValid"/>
+        <result column="ukey" jdbcType="CHAR" property="ukey"/>
+		<result column="identity_ukey" jdbcType="CHAR" property="identityUkey"/>
+		<result column="identity_id" jdbcType="VARCHAR" property="identityId"/>
+
+	</resultMap>
+	<!--	  <result column="Confidence_MMSI" jdbcType="TINYINT" property="confidenceMmsi"/>
+			<result column="ship_length" jdbcType="SMALLINT" property="shipLength"/>
+			<result column="ship_breadth" jdbcType="SMALLINT" property="shipBreadth"/>
+          <result column="Confidence_Ship_Name" jdbcType="TINYINT" property="confidenceShipName"/>
+          <result column="Confidence_Call_Sign" jdbcType="TINYINT" property="confidenceCallSign"/>
+          <result column="Confidence_IMO_Number" jdbcType="TINYINT" property="confidenceImoNumber"/>
+           <result column="identity_created_time" jdbcType="BIGINT" property="identityCreatedTime"/>
+          <result column="created_time" jdbcType="BIGINT" property="createdTime"/>-->
+    <resultMap id="classA" extends="BaseResultMap" type="com.hito.dataware.scheduler.bean.L0CleanAisDynamicClassA">
+    </resultMap>
+    <resultMap id="classB" type="com.hito.dataware.scheduler.bean.L0CleanAisDynamicClassB">
+		<result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="MMSI" jdbcType="INTEGER" property="mmsi"/>
+        <result column="Record_Datetime" jdbcType="INTEGER" property="recordDatetime"/>
+        <result column="Longitude" jdbcType="INTEGER" property="longitude"/>
+        <result column="Latitude" jdbcType="INTEGER" property="latitude"/>
+        <result column="Direction" jdbcType="SMALLINT" property="direction"/>
+        <result column="Heading" jdbcType="SMALLINT" property="heading"/>
+        <result column="Speed" jdbcType="SMALLINT" property="speed"/>
+        <result column="Status" jdbcType="TINYINT" property="status"/>
+        <result column="ROT_Sensor" jdbcType="SMALLINT" property="rotSensor"/>
+        <result column="AIS_Source" jdbcType="SMALLINT" property="aisSource"/>
+        <result column="Ship_Name" jdbcType="VARCHAR" property="shipName"/>
+        <result column="Call_Sign" jdbcType="VARCHAR" property="callSign"/>
+        <result column="identityTime" jdbcType="INTEGER" property="identityTime"/>
+        <result column="Ship_Type" jdbcType="TINYINT" property="shipType"/>
+        <result column="To_Bow" jdbcType="SMALLINT" property="toBow"/>
+        <result column="To_Stern" jdbcType="SMALLINT" property="toStern"/>
+        <result column="To_Port" jdbcType="SMALLINT" property="toPort"/>
+        <result column="To_StarBoard" jdbcType="SMALLINT" property="toStarboard"/>
+		<result column="ship_length" jdbcType="SMALLINT" property="shipLength"/>
+		<result column="ship_breadth" jdbcType="SMALLINT" property="shipBreadth"/>
+        <result column="Fixing_Device" jdbcType="TINYINT" property="fixingDevice"/>
+        <result column="Is_IMO_Number_Valid" jdbcType="TINYINT" property="isImoNumberValid"/>
+        <result column="ukey" jdbcType="CHAR" property="ukey"/>
+        <result column="identity_ukey" jdbcType="CHAR" property="identityUkey"/>
+        <result column="identity_id" jdbcType="VARCHAR" property="identityId"/>
+    </resultMap>
+    <!--因为clean 和l1 这两张表生成的日期不一样 所以这边clean 后面用的left 增加数据量 以后改成inner-->
+    <select id="fromUnknown" resultMap="BaseResultMap">
+    SELECT
+	*
+FROM
+	(
+SELECT
+	clean.*,
+	identity.Ship_Name,
+	identity.Call_Sign,
+	identity.IMO_Number,
+	identity.Record_Datetime AS identityTime,
+	identity.Ship_Type,
+	identity.To_Bow,
+	identity.To_Stern,
+	identity.To_Port,
+	identity.To_StarBoard,
+	identity.ship_length,
+	identity.ship_breadth,
+	identity.Fixing_Device,
+	identity.Is_IMO_Number_Valid,
+	identity.ukey AS identity_ukey,
+	identity.id AS identity_id
+FROM
+	(
+SELECT
+	l0.*
+FROM
+	l0_clean_ais_dynamic_unknown l0
+	INNER JOIN ( SELECT MMSI, max( Record_Datetime ) AS Record_Datetime FROM l0_clean_ais_dynamic_unknown GROUP BY MMSI ) a ON l0.MMSI = a.MMSI
+	AND l0.Record_Datetime = a.Record_Datetime where created_time &gt; #{map.startTime} and created_time &lt;= #{map.endTime}
+	) clean
+	RIGHT JOIN (
+SELECT
+	l1.*
+FROM
+	l1_ship_identity_classunknown_last l1
+	INNER JOIN (
+SELECT
+	max( Record_Datetime ) AS Record_Datetime,
+	MMSI,
+	Ship_Name,
+	Call_Sign,
+	IMO_Number
+FROM
+	l1_ship_identity_classunknown_last
+GROUP BY
+	MMSI,
+	Ship_Name,
+	Call_Sign,
+	IMO_Number
+	) a ON l1.MMSI = a.MMSI
+	AND l1.Record_Datetime = a.Record_Datetime
+	AND l1.Ship_Name = a.Ship_Name
+	AND l1.Call_Sign = a.Call_Sign
+	AND l1.IMO_Number = a.IMO_Number
+	) identity ON clean.MMSI = identity.MMSI
+	) temp
+WHERE
+	temp.MMSI IS NOT NULL  limit #{map.startFlag},#{map.endFlag}
+  </select>
+
+
+    <select id="fromClassa" resultMap="classA">
+    SELECT
+	*
+FROM
+	(
+SELECT
+	clean.*,
+	identity.Ship_Name,
+	identity.Call_Sign,
+	identity.IMO_Number,
+	identity.Record_Datetime AS identityTime,
+	identity.Ship_Type,
+	identity.To_Bow,
+	identity.To_Stern,
+	identity.To_Port,
+	identity.To_StarBoard,
+	identity.Fixing_Device,
+	identity.Is_IMO_Number_Valid,
+	identity.ukey AS identity_ukey,
+	identity.id AS identity_id
+FROM
+	(
+SELECT
+	l0.*
+FROM
+	l0_clean_ais_dynamic_a l0
+	INNER JOIN ( SELECT MMSI, max( Record_Datetime ) AS Record_Datetime FROM l0_clean_ais_dynamic_a GROUP BY MMSI ) a ON l0.MMSI = a.MMSI
+	AND l0.Record_Datetime = a.Record_Datetime where created_time &gt; #{map.startTime} and created_time &lt;= #{map.endTime}
+	) clean
+	RIGHT JOIN (
+SELECT
+	l1.*
+FROM
+	l1_ship_identity_classa_last l1
+	INNER JOIN (
+SELECT
+	max( Record_Datetime ) AS Record_Datetime,
+	MMSI,
+	Ship_Name,
+	Call_Sign,
+	IMO_Number
+FROM
+	l1_ship_identity_classa_last
+GROUP BY
+	MMSI,
+	Ship_Name,
+	Call_Sign,
+	IMO_Number
+	) a ON l1.MMSI = a.MMSI
+	AND l1.Record_Datetime = a.Record_Datetime
+	AND l1.Ship_Name = a.Ship_Name
+	AND l1.Call_Sign = a.Call_Sign
+	AND l1.IMO_Number = a.IMO_Number
+	) identity ON clean.MMSI = identity.MMSI
+	) temp
+WHERE
+	temp.MMSI IS NOT NULL  limit #{map.startFlag},#{map.endFlag}
+  </select>
+
+    <select id="fromClassb" resultMap="classB">
+    SELECT
+	*
+FROM
+	(
+SELECT
+		clean.*,
+	identity.Ship_Name,
+	identity.Call_Sign,
+	identity.Record_Datetime AS identityTime,
+	identity.Ship_Type,
+	identity.To_Bow,
+	identity.To_Stern,
+	identity.To_Port,
+	identity.To_StarBoard,
+	identity.ship_length,
+	identity.ship_breadth,
+	identity.Fixing_Device,
+	identity.ukey AS identity_ukey,
+	identity.id AS identity_id
+FROM
+	(
+SELECT
+	l0.*
+FROM
+	l0_clean_ais_dynamic_b l0
+	INNER JOIN ( SELECT MMSI, max( Record_Datetime ) AS Record_Datetime FROM l0_clean_ais_dynamic_b GROUP BY MMSI ) a ON l0.MMSI = a.MMSI
+	AND l0.Record_Datetime = a.Record_Datetime where created_time &gt; #{map.startTime} and created_time &lt;= #{map.endTime}
+	) clean
+	RIGHT JOIN (
+SELECT
+	l1.*
+FROM
+	l1_ship_identity_classb_last l1
+	INNER JOIN (
+SELECT
+	max( Record_Datetime ) AS Record_Datetime,
+	MMSI,
+	Ship_Name,
+	Call_Sign
+FROM
+	l1_ship_identity_classb_last
+GROUP BY
+	MMSI,
+	Ship_Name,
+	Call_Sign
+	) a ON l1.MMSI = a.MMSI
+	AND l1.Record_Datetime = a.Record_Datetime
+	AND l1.Ship_Name = a.Ship_Name
+	AND l1.Call_Sign = a.Call_Sign
+	) identity ON clean.MMSI = identity.MMSI
+	) temp
+WHERE
+	temp.MMSI IS NOT NULL  limit #{map.startFlag},#{map.endFlag}
+  </select>
+</mapper>

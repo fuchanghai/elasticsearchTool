@@ -1,0 +1,70 @@
+server:
+  port: 20095
+  servlet:
+    context-path: /api/service/
+
+spring:
+  application:
+    name: dataware-scheduler
+  security:
+    user:
+      name: hitocas
+      password: Hitocas123
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:10100/dataware02?allowMultiQueries=true
+    username: hitowx
+    password: WX@hito2019_
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      auto-commit: true
+      idle-timeout: 60000
+      pool-name: DatebookHikariCP
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  data:
+    elasticsearch:
+      cluster-nodes: 127.0.0.1:10061
+      cluster-name: dataware-es
+      repositories: true
+  elasticsearch:
+    rest:
+      uris:  127.0.0.1:10060
+      
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  mybatis:
+    config-location: classpath:config/mybatis-config.xml        
+
+elasticsearch:
+  ip: 127.0.0.1
+  port: 10060
+  cluster-name: dataware-es
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://hitocas:Hitocas123@localhost:20090/eureka/
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+#船的默认补全查询的条数
+ship:
+  completion:
+    size: 10

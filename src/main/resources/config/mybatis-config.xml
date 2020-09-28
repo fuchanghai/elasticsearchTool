@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+    <package name="com.hito.dataware.scheduler.bean"/>
+  </typeAliases>
+  <!--<mappers>-->
+  <!--<mapper resource="sample/mybatis/mapper/CityMapper.xml"/>-->
+  <!--<mapper resource="sample/mybatis/mapper/HotelMapper.xml"/>-->
+  <!--</mappers>-->
+  <plugins>
+    <plugin interceptor="com.hito.dataware.scheduler.util.MyPlugin2">
+      <!--<property name="used" value="0" />-->
+    </plugin>
+
+    <!--<plugin interceptor="com.fuchanghai.service.MyPlugin">
+      &lt;!&ndash;<property name="used" value="0" />&ndash;&gt;
+    </plugin>
+    <plugin interceptor="com.fuchanghai.service.FDNSqlInterceptor">
+      &lt;!&ndash;<property name="used" value="0" />&ndash;&gt;
+    </plugin>-->
+
+    <!--<plugin interceptor="com.fuchanghai.service.MyPlugin3">
+      &lt;!&ndash;<property name="used" value="0" />&ndash;&gt;
+    </plugin>
+-->
+  </plugins>
+</configuration>

@@ -1,0 +1,65 @@
+server:
+  port: 20095
+  servlet:
+    context-path: /api/service/
+
+spring:
+  application:
+    name: dataware-scheduler
+  security:
+    user:
+      name: hitocas
+      password: Hitocas123
+  rabbitmq:
+    host: 192.168.10.240
+    port: 5672
+    username: Admin
+    password: Hitocas123
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://rm-uf62rnev880i9ia4f.mysql.rds.aliyuncs.com:3306/dataware?allowMultiQueries=true
+    username: root
+    password: dataware_2019
+  data:
+    elasticsearch:
+      cluster-nodes: 127.0.0.1:9300
+      cluster-name: dataware-es
+      repositories: true
+  elasticsearch:
+    rest:
+      uris: 127.0.0.1:9200
+      
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  mybatis:
+    config-location: classpath:config/mybatis-config.xml        
+
+elasticsearch:
+  ip: 127.0.0.1
+  port: 9200
+  cluster-name: dataware-es
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://hitocas:Hitocas123@localhost:20090/eureka/
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+#船的默认补全查询的条数
+ship:
+  completion:
+    size: 10
